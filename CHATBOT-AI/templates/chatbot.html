@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> JPI Chatbot</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            background-image: url("{{ url_for('static', filename='images/SchoolImage.jpg') }}");
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="chatbox-container">
+        <div class="header">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="JPI Logo" class="logo">
+            <h1>Japan-Philippines Institute of Technology - Muzon Campus Inc.</h1>
+        </div>
+
+        <div class="chat-box">
+            <div class="chat-area" id="chat-area">
+             </div>
+            <div class="input-area">
+                <input type="text" id="user-input" placeholder="Type your question here..." class="user-input">
+                <button id="send-btn" class="send-btn">Send</button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Welcome to Our ChatBot! Type the word 'bye' once you are done using our chatbot~</p>
+            <p>Contact: 0917-105-5951 | jpi.muzon2019@gmail.com</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("send-btn").addEventListener("click", sendMessage);
+        document.getElementById("user-input").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+        });
+    
+    function sendMessage() {
+    var userInput = document.getElementById("user-input").value;
+
+    if (userInput.trim() !== "") {
+        appendMessage("User: " + userInput, 'user');
+
+        document.getElementById("user-input").value = "";
+
+        if (userInput.toLowerCase() === "bye") {
+            appendMessage("Chatbot: Goodbye! If you have any other questions about Japan-Philippines Institute of Technology - Muzon Campus Inc. in the future, feel free to ask. Have a great day! 😊", 'chatbot');
+
+            // Disable the input field and send button after saying goodbye
+            document.getElementById("user-input").disabled = true;
+            document.getElementById("send-btn").disabled = true;
+            document.getElementById("user-input").placeholder = "Chat has ended";
+            localStorage.removeItem('chatHistory'); // 🧹 Clear chat history
+            return;
+        }
+
+        // Send the message to the Flask server
+        fetch('/send_message', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_input: userInput })
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Display the bot's response with sender type 'chatbot'
+            appendMessage("JPI ChatBot: " + data.response, 'chatbot');
+        })
+        .catch(error => console.error("Error:", error));
+    }
+}
+
+
+        
+        function appendMessage(message, sender) {
+            var chatArea = document.getElementById("chat-area");
+            var messageDiv = document.createElement("div");
+
+            // Use innerHTML to render HTML content properly
+            messageDiv.innerHTML = message;  // This will allow <br>, <b>, etc. to be rendered correctly.
+
+            // Assign classes for different sender types
+            if (sender === 'user') {
+                messageDiv.classList.add('user-message'); // Assign 'user-message' class for user
+            } else {
+                messageDiv.classList.add('chatbot-message'); // Assign 'chatbot-message' class for bot
+            }
+
+            chatArea.appendChild(messageDiv);
+            chatArea.scrollTop = chatArea.scrollHeight; // Scroll to the bottom
+
+            // Save to localStorage
+            let chatHistory = JSON.parse(localStorage.getItem('chatHistory')) || [];
+            chatHistory.push({ text: message, sender: sender });
+            localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+        }
+
+        // Restore chat history from localStorage
+        window.onload = function() {
+            const savedMessages = JSON.parse(localStorage.getItem('chatHistory')) || [];
+            savedMessages.forEach(msg => {
+                appendMessage(msg.text, msg.sender);
+            });
+        };
+    </script>    
+</body>
+</html>
