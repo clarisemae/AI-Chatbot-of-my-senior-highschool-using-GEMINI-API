@@ -2,15 +2,15 @@
 
 Just a quick project to test out Gemini API for Chatbot
 
-## JPI Muzon AI Assistant
+# JPI Muzon AI Assistant
 This repository contains a context-aware AI chatbot developed for Japan-Philippines Institute of Technology (JPI) – Muzon Campus. The application utilizes the Google Gemini 2.0 Flash model to provide real-time, accurate responses regarding school enrollment, academic strands, and general inquiries.
 
 The project includes both a web-based interface (Flask) and a command-line interface (CLI) for testing.
 
-## Overview
+# Overview
 The goal of this project was to create a lightweight conversational agent capable of maintaining context over multiple turns. It references a specialized dataset (via prompt history) to ensure answers are specific to JPI Muzon's policies and location.
 
-## Tech Stack
+# Tech Stack
 Backend: Python 3, Flask
 AI/LLM: Google Generative AI (gemini-2.0-flash)
 Data Persistence: Local JSON file storage (history.json)
@@ -90,14 +90,14 @@ Bash
 python chatbot.py
 Type bye to terminate the session.
 
-## Implementation Details
+# Implementation Details
 Context Management: The application loads and saves conversation history to history.json on every turn. This allows the model to "remember" previous interactions (e.g., if a user asks "Where is it located?" after discussing the school name).
 
 Input Validation: The web application (app.py) includes a validation layer (validate_user_input) to intercept specific queries and cross-reference them with chat history before querying the LLM.
 
 Formatting: Responses are processed to convert Markdown (bolding, links) into HTML tags for the frontend and clean text for the CLI.
 
-## Future Improvements
+# Future Improvements
 Migrate data persistence from history.json to a lightweight database (SQLite).
 
 Implement RAG (Retrieval-Augmented Generation) to query the student handbook dynamically.
