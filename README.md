@@ -110,8 +110,8 @@ Type `bye` to terminate the session.
 
 ## Future Improvements
 
-* [ ] Migrate data persistence from `history.json` to a lightweight database (SQLite).
-* [ ] Implement RAG (Retrieval-Augmented Generation) to query the student handbook dynamically.
-* [ ] Improve frontend UI with Bootstrap or Tailwind CSS.
+* Migrate data persistence from `history.json` to a lightweight database (SQLite).
+* Implement RAG (Retrieval-Augmented Generation) to query the student handbook dynamically.
+* Improve frontend UI with Bootstrap or Tailwind CSS.
 
 ```
